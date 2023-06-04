@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import MapView, { Marker, PROVIDER_GOOGLE, Callout } from "react-native-maps";
 import { MapStyle } from "./styles/MapStyle";
 import { ParkMarker } from "./components/MapMarkers/ParkMarker";
 import { CastleMarker } from "./components/MapMarkers/CastleMarker";
+import {
+  Actionsheet,
+  useDisclose,
+  Box,
+  Center,
+  NativeBaseProvider,
+} from "native-base";
 
 // Marker Lookup
 const markersByFeatureType = {
@@ -26,7 +33,7 @@ const parks = [
         latitude: 40.779447,
         longitude: -73.96906,
         type: "castle",
-        tags: ["fun", "romantic"],
+        tags: ["historic", "fun", "romantic"],
       },
     ],
   },
@@ -42,10 +49,14 @@ const parks = [
   // Add more parks here
 ];
 
-const FeatureMarker = ({ location }) => {
+const FeatureMarker = ({ location, onOpen, setSelectedFeature }) => {
   return (
     <View style={{ width: 40, height: 56 }}>
       <Marker
+        onPress={() => {
+          setSelectedFeature(location);
+          onOpen();
+        }}
         coordinate={{
           latitude: location.latitude,
           longitude: location.longitude,
@@ -56,67 +67,93 @@ const FeatureMarker = ({ location }) => {
         <Callout
           tooltip
           style={{
-            backgroundColor: "#ffffff",
-            width: 250,
-            padding: 15,
-            borderRadius: 4,
-            borderColor: "#007fff",
-            borderWidth: 1,
+            opacity: 0,
           }}
-        >
-          <Text style={{ fontWeight: "bold", fontSize: 20, marginLeft: 3 }}>
-            {location.name}
-          </Text>
-          <Text style={{ marginBottom: 10, marginLeft: 3 }}>
-            {location.size}
-          </Text>
-          <View
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              flexDirection: "row",
-            }}
-          >
-            {location.tags.map((tag, index) => (
-              <ParkTag tag={tag} index={index} />
-            ))}
-          </View>
-        </Callout>
+        ></Callout>
         {markersByFeatureType[location.type]}
       </Marker>
     </View>
   );
 };
 
-const ParkWithFeatures = ({ park }) => (
+const ParkMarkers = ({ park, onOpen, setSelectedFeature }) => (
   <>
-    <FeatureMarker location={park} />
-    {park.features.map((feature) => (
-      <FeatureMarker location={feature} />
+    <FeatureMarker
+      onOpen={onOpen}
+      setSelectedFeature={setSelectedFeature}
+      location={park}
+    />
+    {park.features.map((feature, index) => (
+      <FeatureMarker
+        key={index}
+        onOpen={onOpen}
+        setSelectedFeature={setSelectedFeature}
+        location={feature}
+      />
     ))}
   </>
 );
 
 export default function App() {
+  const { isOpen, onOpen, onClose } = useDisclose();
+  const [selectedFeature, setSelectedFeature] = useState(parks[0]);
   return (
-    <View style={styles.container}>
-      <MapView
-        showsUserLocation={true}
-        provider={PROVIDER_GOOGLE}
-        style={styles.map}
-        customMapStyle={MapStyle}
-        initialRegion={{
-          latitude: 40.7829,
-          longitude: -73.9654,
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      >
-        {parks.map((park) => (
-          <ParkWithFeatures park={park} />
-        ))}
-      </MapView>
-    </View>
+    <NativeBaseProvider>
+      <View style={styles.container}>
+        <MapView
+          showsUserLocation={true}
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          customMapStyle={MapStyle}
+          initialRegion={{
+            latitude: 40.7829,
+            longitude: -73.9654,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        >
+          {parks.map((park, index) => (
+            <ParkMarkers
+              key={index}
+              onOpen={onOpen}
+              setSelectedFeature={setSelectedFeature}
+              park={park}
+            />
+          ))}
+        </MapView>
+      </View>
+      <Center>
+        <Actionsheet isOpen={isOpen} onClose={onClose} disableOverlay>
+          <Actionsheet.Content>
+            <Box w="100%" h={100} px={4} justifyContent="center">
+              <Text
+                style={{ fontWeight: "bold", fontSize: 20, marginTop: 0 }}
+                color="gray.500"
+                _dark={{
+                  color: "gray.300",
+                }}
+              >
+                {selectedFeature.name}
+              </Text>
+              <Text style={{ marginBottom: 10, marginLeft: 3 }}>
+                {selectedFeature.size}
+              </Text>
+              <View
+                style={{
+                  display: "flex",
+                  flexWrap: "wrap",
+                  flexDirection: "row",
+                }}
+              >
+                {selectedFeature.tags.map((tag, index) => (
+                  <ParkTag tag={tag} key={index} />
+                ))}
+              </View>
+            </Box>
+          </Actionsheet.Content>
+        </Actionsheet>
+      </Center>
+    </NativeBaseProvider>
   );
 }
 
