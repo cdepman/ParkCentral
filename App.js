@@ -22,7 +22,7 @@ const markersByFeatureType = {
 
 const FeatureMarker = ({ location, onOpen, setSelectedFeature }) => {
   return (
-    <View style={{ width: 40, height: 56 }}>
+    <View style={{ width: 20, height: 20 }}>
       <Marker
         onPress={() => {
           setSelectedFeature(location);
@@ -46,14 +46,6 @@ const ParkMarkers = ({ park, onOpen, setSelectedFeature }) => (
       setSelectedFeature={setSelectedFeature}
       location={park}
     />
-    {park.features.map((feature, index) => (
-      <FeatureMarker
-        key={index}
-        onOpen={onOpen}
-        setSelectedFeature={setSelectedFeature}
-        location={feature}
-      />
-    ))}
   </>
 );
 
@@ -85,13 +77,53 @@ const FeatureDetailDrawer = ({ isOpen, onClose, feature }) => (
   </Center>
 );
 
+const isWithinDistance = (point1, point2, limitInKm = 1) => {
+  const toRad = (value) => (value * Math.PI) / 180;
+
+  const R = 6371; // Earth radius in km
+  const dLat = toRad(point2.latitude - point1.latitude);
+  const dLon = toRad(point2.longitude - point1.longitude);
+
+  const lat1 = toRad(point1.latitude);
+  const lat2 = toRad(point2.latitude);
+
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  const distance = R * c;
+  return distance <= limitInKm;
+};
+
 export default function App() {
   const { isOpen, onOpen, onClose } = useDisclose();
   const [selectedFeature, setSelectedFeature] = useState(parks[0]);
+  const [zoomedPark, setZoomedPark] = useState(null);
   return (
     <NativeBaseProvider>
       <View style={styles.container}>
         <MapView
+          onRegionChangeComplete={(region) => {
+            // only render park features when park is within zoomed map region
+            const parkInRegion = parks.find((park) => {
+              const parklatLon = {
+                latitude: park.latitude,
+                longitude: park.longitude,
+              };
+              const regionLatLon = {
+                latitude: region.latitude,
+                longitude: park.longitude,
+              };
+              const isZoomedIn =
+                region.latitudeDelta + region.longitudeDelta < 0.15;
+              if (isWithinDistance(parklatLon, regionLatLon) && isZoomedIn) {
+                return true;
+              }
+            });
+            setZoomedPark(parkInRegion);
+          }}
           onPress={(event) => {
             // close the drawer unless another marker is selected
             if (event.nativeEvent.action !== "marker-press") {
@@ -117,6 +149,15 @@ export default function App() {
               park={park}
             />
           ))}
+          {zoomedPark &&
+            zoomedPark.features.map((feature, index) => (
+              <FeatureMarker
+                key={index}
+                onOpen={onOpen}
+                setSelectedFeature={setSelectedFeature}
+                location={feature}
+              />
+            ))}
         </MapView>
       </View>
       <FeatureDetailDrawer

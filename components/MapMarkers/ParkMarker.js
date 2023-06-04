@@ -5,8 +5,8 @@ export const ParkMarker = (
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
     xmlSpace="preserve"
-    width={60}
-    height={40}
+    width={40}
+    height={30}
     viewBox="0 0 1187 1187"
   >
     <Circle cx="593.5" cy="593.5" r="593.5" fill="#007fff" />

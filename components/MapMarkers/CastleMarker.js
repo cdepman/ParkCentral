@@ -1,7 +1,7 @@
 import Svg, { Path, Circle, Rect, G, Polygon } from "react-native-svg";
 
 export const CastleMarker = (
-  <Svg version="1.1" id="Layer_1" viewBox="0 0 508 508" width={60} height={40}>
+  <Svg version="1.1" id="Layer_1" viewBox="0 0 508 508" width={40} height={30}>
     <Circle fill="#FFD05B" cx="254" cy="254" r="254" />
     <Path
       fill="#F9B54C"
