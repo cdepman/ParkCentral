@@ -12,42 +12,13 @@ import {
   NativeBaseProvider,
 } from "native-base";
 
+import parks from "./data/parkData.json";
+
 // Marker Lookup
 const markersByFeatureType = {
   park: ParkMarker,
   castle: CastleMarker,
 };
-
-// Dummy data
-const parks = [
-  {
-    name: "Central Park",
-    size: "843 acres",
-    tags: ["castle", "lakes", "dog-friendly", "bathrooms", "water fountains"],
-    latitude: 40.7829,
-    longitude: -73.9654,
-    type: "park",
-    features: [
-      {
-        name: "Belvedere Castle",
-        latitude: 40.779447,
-        longitude: -73.96906,
-        type: "castle",
-        tags: ["historic", "fun", "romantic"],
-      },
-    ],
-  },
-  {
-    name: "Prospect Park",
-    size: "585 acres",
-    tags: ["bike-friendly", "bathrooms"],
-    latitude: 40.6616,
-    longitude: -73.9692,
-    type: "park",
-    features: [],
-  },
-  // Add more parks here
-];
 
 const FeatureMarker = ({ location, onOpen, setSelectedFeature }) => {
   return (
@@ -61,15 +32,7 @@ const FeatureMarker = ({ location, onOpen, setSelectedFeature }) => {
           latitude: location.latitude,
           longitude: location.longitude,
         }}
-        title={location.name}
-        description={location.tags}
       >
-        <Callout
-          tooltip
-          style={{
-            opacity: 0,
-          }}
-        ></Callout>
         {markersByFeatureType[location.type]}
       </Marker>
     </View>
@@ -94,6 +57,34 @@ const ParkMarkers = ({ park, onOpen, setSelectedFeature }) => (
   </>
 );
 
+const FeatureDetailDrawer = ({ isOpen, onClose, feature }) => (
+  <Center>
+    <Actionsheet isOpen={isOpen} onClose={onClose} disableOverlay>
+      <Actionsheet.Content>
+        <Box w="100%" h={100} px={4} justifyContent="center">
+          <Text style={{ fontWeight: "bold", fontSize: 20, marginTop: 0 }}>
+            {feature.name}
+          </Text>
+          <Text style={{ marginBottom: 10, marginLeft: 3 }}>
+            {feature.size}
+          </Text>
+          <View
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              flexDirection: "row",
+            }}
+          >
+            {feature.tags.map((tag, index) => (
+              <ParkTag tag={tag} key={index} />
+            ))}
+          </View>
+        </Box>
+      </Actionsheet.Content>
+    </Actionsheet>
+  </Center>
+);
+
 export default function App() {
   const { isOpen, onOpen, onClose } = useDisclose();
   const [selectedFeature, setSelectedFeature] = useState(parks[0]);
@@ -101,6 +92,12 @@ export default function App() {
     <NativeBaseProvider>
       <View style={styles.container}>
         <MapView
+          onPress={(event) => {
+            // close the drawer unless another marker is selected
+            if (event.nativeEvent.action !== "marker-press") {
+              onClose();
+            }
+          }}
           showsUserLocation={true}
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -122,37 +119,11 @@ export default function App() {
           ))}
         </MapView>
       </View>
-      <Center>
-        <Actionsheet isOpen={isOpen} onClose={onClose} disableOverlay>
-          <Actionsheet.Content>
-            <Box w="100%" h={100} px={4} justifyContent="center">
-              <Text
-                style={{ fontWeight: "bold", fontSize: 20, marginTop: 0 }}
-                color="gray.500"
-                _dark={{
-                  color: "gray.300",
-                }}
-              >
-                {selectedFeature.name}
-              </Text>
-              <Text style={{ marginBottom: 10, marginLeft: 3 }}>
-                {selectedFeature.size}
-              </Text>
-              <View
-                style={{
-                  display: "flex",
-                  flexWrap: "wrap",
-                  flexDirection: "row",
-                }}
-              >
-                {selectedFeature.tags.map((tag, index) => (
-                  <ParkTag tag={tag} key={index} />
-                ))}
-              </View>
-            </Box>
-          </Actionsheet.Content>
-        </Actionsheet>
-      </Center>
+      <FeatureDetailDrawer
+        isOpen={isOpen}
+        onClose={onClose}
+        feature={selectedFeature}
+      />
     </NativeBaseProvider>
   );
 }

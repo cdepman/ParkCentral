@@ -1,0 +1,28 @@
+[
+  {
+    "name": "Central Park",
+    "size": "843 acres",
+    "tags": ["castle", "lakes", "dog-friendly", "bathrooms", "water fountains"],
+    "latitude": 40.7829,
+    "longitude": -73.9654,
+    "type": "park",
+    "features": [
+      {
+        "name": "Belvedere Castle",
+        "latitude": 40.779447,
+        "longitude": -73.96906,
+        "type": "castle",
+        "tags": ["historic", "fun", "romantic"]
+      }
+    ]
+  },
+  {
+    "name": "Prospect Park",
+    "size": "585 acres",
+    "tags": ["bike-friendly", "bathrooms"],
+    "latitude": 40.6616,
+    "longitude": -73.9692,
+    "type": "park",
+    "features": []
+  }
+]
