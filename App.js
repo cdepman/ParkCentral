@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { MapStyle } from "./styles/MapStyle";
-import FeatureDetailDrawer from "./components/MapMarkers/FeatureDetailDrawer";
+import FeatureDetailDrawer from "./components/FeatureDetailDrawer";
 import FeatureMarker from "./components/FeatureMarker";
 import { useDisclose, NativeBaseProvider } from "native-base";
 import { isWithinDistance } from "./util/isWithinDistance";
