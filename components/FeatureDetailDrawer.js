@@ -6,13 +6,13 @@ const ParkTag = ({ tag, index }) => (
   <Text
     style={{
       alignSelf: "flex-start",
-      paddingLeft: 4,
-      paddingRight: 4,
+      paddingLeft: 9,
+      paddingRight: 9,
       paddingTop: 3,
       paddingBottom: 3,
       margin: 3,
       borderWidth: 1,
-      borderRadius: 5,
+      borderRadius: 12,
     }}
     key={index}
   >
