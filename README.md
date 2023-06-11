@@ -2,6 +2,8 @@ Welcome! We're building an app dedicated to green spaces especially in urban set
 
 TODO:
 
+- add attributes to toilets: number of toilets, number of urinals
+- add hours
 - add more feature types:
   lake, meadow, lawn, pond, bathroom, playground, path, zoo, bench, trashcan, fountain, statue, sculpture, rock, BBQ Pit, picnic table, sports field
 - Add ParkServe Data (https://www.tpl.org/parkserve)
