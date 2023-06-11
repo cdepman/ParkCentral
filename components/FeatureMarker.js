@@ -2,11 +2,13 @@ import { ParkMarker } from "./MapMarkers/ParkMarker";
 import { CastleMarker } from "./MapMarkers/CastleMarker";
 import { View } from "react-native";
 import { Marker } from "react-native-maps";
+import { RestroomMarker } from "./MapMarkers/RestroomMarker";
 
 // Marker Lookup
 const markerByFeatureType = {
   park: ParkMarker,
   castle: CastleMarker,
+  restroom: RestroomMarker,
 };
 
 export default FeatureMarker = ({ location, onOpen, setSelectedFeature }) => {

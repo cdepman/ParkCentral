@@ -25,7 +25,7 @@ export default FeatureDetailDrawer = ({ isOpen, onClose, feature }) => (
       <Actionsheet.Content>
         <Box w="100%" h={100} px={4} justifyContent="center">
           <Text style={{ fontWeight: "bold", fontSize: 20, marginTop: 0 }}>
-            {feature.name}
+            {feature.title}
           </Text>
           <Text style={{ marginBottom: 10, marginLeft: 3 }}>
             {feature.size}

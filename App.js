@@ -30,7 +30,7 @@ export default function App() {
               };
               const isZoomedIn =
                 region.latitudeDelta + region.longitudeDelta < 0.15;
-              if (isWithinDistance(parklatLon, regionLatLon) && isZoomedIn) {
+              if (isWithinDistance(parklatLon, regionLatLon, 2) && isZoomedIn) {
                 return true;
               }
             });
