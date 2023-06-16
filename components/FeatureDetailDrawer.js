@@ -20,42 +20,54 @@ const ParkTag = ({ tag, index }) => (
   </Text>
 );
 
-export default FeatureDetailDrawer = ({ isOpen, onClose, feature }) => (
-  <Center>
-    <Actionsheet isOpen={isOpen} onClose={onClose} disableOverlay>
-      <Actionsheet.Content>
-        <Box w="100%" h={300} px={4}>
-          <Text style={{ fontWeight: "bold", fontSize: 20, marginTop: 0 }}>
-            {feature.title}
-          </Text>
-          <Text style={{ marginBottom: 10, marginLeft: 3 }}>
-            {feature.size}
-          </Text>
-          <AirbnbRating
-            selectedColor="#228B22"
-            isDisabled
-            size={15}
-            defaultRating={feature.rating}
-            showRating={false}
-            starContainerStyle={{
-              alignSelf: "flex-start",
-              justifySelf: "flex-start",
-              marginBottom: 20,
-            }}
-          />
-          <View
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              flexDirection: "row",
-            }}
-          >
-            {feature.tags.map((tag, index) => (
-              <ParkTag tag={tag} key={index} />
-            ))}
-          </View>
-        </Box>
-      </Actionsheet.Content>
-    </Actionsheet>
-  </Center>
-);
+export default FeatureDetailDrawer = ({ isOpen, onClose, feature }) => {
+  console.log(feature);
+  return (
+    <Center>
+      <Actionsheet isOpen={isOpen} onClose={onClose} disableOverlay>
+        <Actionsheet.Content>
+          <Box w="100%" h={300} px={4}>
+            <Text style={{ fontWeight: "bold", fontSize: 20, marginTop: 0 }}>
+              {feature.title}
+            </Text>
+            <Text style={{ marginBottom: 10, marginLeft: 3 }}>
+              {feature.size}
+            </Text>
+            <AirbnbRating
+              selectedColor="#228B22"
+              isDisabled
+              size={15}
+              defaultRating={feature.rating}
+              showRating={false}
+              starContainerStyle={{
+                alignSelf: "flex-start",
+                justifySelf: "flex-start",
+                marginBottom: 20,
+              }}
+            />
+            <View
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                flexDirection: "row",
+              }}
+            >
+              {feature.tags?.map((tag, index) => (
+                <ParkTag tag={tag} key={index} />
+              ))}
+            </View>
+            <Text
+              style={{
+                display: "flex",
+                flexWrap: "wrap",
+                flexDirection: "row",
+              }}
+            >
+              {feature.description}
+            </Text>
+          </Box>
+        </Actionsheet.Content>
+      </Actionsheet>
+    </Center>
+  );
+};

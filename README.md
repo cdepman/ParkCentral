@@ -9,3 +9,8 @@ TODO:
 - Add ParkServe Data (https://www.tpl.org/parkserve)
 - Add tag timestamps and upvotes and create a freshness/decay algorithm for how they rank based on creation time and how many recent votes they have
 - Async sentiment analysis job running against the tags, weighing and coloring them accordingly
+
+Data Sources:
+
+- https://www.centralparknyc.org/locations
+- https://data.cityofnewyork.us/Environment/NYC-Parks-Drinking-Fountains/622h-mkfu
