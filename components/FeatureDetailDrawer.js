@@ -21,7 +21,6 @@ const ParkTag = ({ tag, index }) => (
 );
 
 export default FeatureDetailDrawer = ({ isOpen, onClose, feature }) => {
-  console.log(feature);
   return (
     <Center>
       <Actionsheet isOpen={isOpen} onClose={onClose} disableOverlay>
