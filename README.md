@@ -2,6 +2,9 @@ Welcome! We're building an app dedicated to green spaces especially in urban set
 
 TODO:
 
+- add firebase
+- add phone auth
+- store user data (tags, favorites)
 - add attributes to toilets: number of toilets, number of urinals
 - add hours
 - add more feature types:
@@ -9,6 +12,8 @@ TODO:
 - Add ParkServe Data (https://www.tpl.org/parkserve)
 - Add tag timestamps and upvotes and create a freshness/decay algorithm for how they rank based on creation time and how many recent votes they have
 - Async sentiment analysis job running against the tags, weighing and coloring them accordingly
+- Broadcast social events / meetups in the park
+  https://www.codedaily.io/tutorials/Build-a-Map-with-Custom-Animated-Markers-and-Region-Focus-when-Content-is-Scrolled-in-React-Native
 
 Data Sources:
 
