@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { MapStyle } from "./styles/MapStyle";
 import FeatureDetailDrawer from "./components/FeatureDetailDrawer";
 import FeatureMarker from "./components/FeatureMarker";
-import { useDisclose, NativeBaseProvider } from "native-base";
+import { useDisclose, NativeBaseProvider, Button } from "native-base";
 import { isWithinDistance } from "./util/isWithinDistance";
 
 import parks from "./data/parkData.json";
@@ -13,6 +13,19 @@ export default function App() {
   const { isOpen, onOpen, onClose } = useDisclose();
   const [selectedFeature, setSelectedFeature] = useState(parks[0]);
   const [zoomedPark, setZoomedPark] = useState(null);
+  const [showWaterFountains, setShowWaterFountains] = useState(true);
+  const [showBathrooms, setShowBathrooms] = useState(true);
+
+  const filterFeatures = (features) => {
+    return features.filter((feature) => {
+      if (!showWaterFountains && feature.type === "drinkingFountain") {
+        return false;
+      } else if (!showBathrooms && feature.type === "restroom") {
+        return false;
+      }
+      return true;
+    });
+  };
   return (
     <NativeBaseProvider>
       <View style={styles.container}>
@@ -62,7 +75,7 @@ export default function App() {
             />
           ))}
           {zoomedPark &&
-            zoomedPark.features.map((feature, index) => (
+            filterFeatures(zoomedPark.features).map((feature, index) => (
               <FeatureMarker
                 key={index}
                 onOpen={onOpen}
@@ -71,6 +84,36 @@ export default function App() {
               />
             ))}
         </MapView>
+      </View>
+      <View
+        style={{
+          position: "absolute", //use absolute position to show button on top of the map
+          top: "20%", //for center align
+          alignSelf: "flex-start", //for align to right
+        }}
+      >
+        <Button
+          style={{
+            margin: 5,
+            backgroundColor: "white",
+            borderWidth: 3,
+            borderColor: "black",
+          }}
+          onPress={() => setShowWaterFountains(!showWaterFountains)}
+        >
+          <Text style={{ fontSize: 20 }}>💧</Text>
+        </Button>
+        <Button
+          style={{
+            margin: 5,
+            backgroundColor: "white",
+            borderWidth: 3,
+            borderColor: "black",
+          }}
+          onPress={() => setShowBathrooms(!showBathrooms)}
+        >
+          <Text style={{ fontSize: 20 }}>🚽</Text>
+        </Button>
       </View>
       <FeatureDetailDrawer
         isOpen={isOpen}
