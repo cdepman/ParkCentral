@@ -19,3 +19,4 @@ Data Sources:
 
 - https://www.centralparknyc.org/locations
 - https://data.cityofnewyork.us/Environment/NYC-Parks-Drinking-Fountains/622h-mkfu
+- https://www.prospectpark.org/visit-the-park/park-map/
