@@ -73,6 +73,7 @@ export default function App() {
               onClose();
             }
           }}
+          showsMyLocationButton={true}
           showsUserLocation={true}
           provider={PROVIDER_GOOGLE}
           style={styles.map}
@@ -106,11 +107,11 @@ export default function App() {
       </View>
       <View
         style={{
-          position: "absolute", //use absolute position to show button on top of the map
-          top: "20%", //for center align
-          alignSelf: "flex-start", //for align to right
-          backgroundColor: "#00a347",
-          padding: 2,
+          position: "absolute",
+          bottom: "17%",
+          alignSelf: "flex-start",
+          backgroundColor: "#414a4c90",
+          padding: 4,
           borderBottomRightRadius: 12,
           borderTopRightRadius: 12,
         }}
