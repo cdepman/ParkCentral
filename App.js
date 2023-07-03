@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import MapView, { PROVIDER_GOOGLE } from "react-native-maps";
 import { MapStyle } from "./styles/MapStyle";
 import FeatureDetailDrawer from "./components/FeatureDetailDrawer";
 import FeatureMarker from "./components/FeatureMarker";
-import { useDisclose, NativeBaseProvider, Button } from "native-base";
+import { useDisclose, NativeBaseProvider } from "native-base";
 import { isWithinDistance } from "./util/isWithinDistance";
+import FilterButton from "./components/FilterButton";
 
 import parks from "./data/parkData.json";
 
@@ -13,19 +14,31 @@ export default function App() {
   const { isOpen, onOpen, onClose } = useDisclose();
   const [selectedFeature, setSelectedFeature] = useState(parks[0]);
   const [zoomedPark, setZoomedPark] = useState(null);
-  const [showWaterFountains, setShowWaterFountains] = useState(true);
-  const [showBathrooms, setShowBathrooms] = useState(true);
+  const [selectedFeatureFilters, setSelectedFeatureFilters] = useState({
+    drinkingFountain: true,
+    restroom: true,
+  });
+  const [zoomedParkFeatures, setZoomedParkFeatures] = useState(
+    zoomedPark?.features
+  );
 
   const filterFeatures = (features) => {
-    return features.filter((feature) => {
-      if (!showWaterFountains && feature.type === "drinkingFountain") {
-        return false;
-      } else if (!showBathrooms && feature.type === "restroom") {
-        return false;
+    return features.filter(({ type }) => {
+      if (selectedFeatureFilters[type]) {
+        return true;
       }
-      return true;
+      return false;
     });
   };
+
+  const updateFilterSelection = (selectedFeatureFilterName) => {
+    setSelectedFeatureFilters({
+      ...selectedFeatureFilters,
+      [selectedFeatureFilterName]:
+        !selectedFeatureFilters[selectedFeatureFilterName],
+    });
+  };
+
   return (
     <NativeBaseProvider>
       <View style={styles.container}>
@@ -47,7 +60,12 @@ export default function App() {
                 return true;
               }
             });
-            setZoomedPark(parkInRegion);
+            if (parkInRegion) {
+              setZoomedPark(parkInRegion);
+              setZoomedParkFeatures(parkInRegion.features);
+            } else {
+              setZoomedPark(null);
+            }
           }}
           onPress={(event) => {
             // close the drawer unless another marker is selected
@@ -75,7 +93,8 @@ export default function App() {
             />
           ))}
           {zoomedPark &&
-            filterFeatures(zoomedPark.features).map((feature, index) => (
+            zoomedParkFeatures &&
+            filterFeatures(zoomedParkFeatures).map((feature, index) => (
               <FeatureMarker
                 key={index}
                 onOpen={onOpen}
@@ -90,30 +109,32 @@ export default function App() {
           position: "absolute", //use absolute position to show button on top of the map
           top: "20%", //for center align
           alignSelf: "flex-start", //for align to right
+          backgroundColor: "#00a347",
+          padding: 2,
+          borderBottomRightRadius: 12,
+          borderTopRightRadius: 12,
         }}
       >
-        <Button
-          style={{
-            margin: 5,
-            backgroundColor: "white",
-            borderWidth: 3,
-            borderColor: "black",
-          }}
-          onPress={() => setShowWaterFountains(!showWaterFountains)}
-        >
-          <Text style={{ fontSize: 20 }}>💧</Text>
-        </Button>
-        <Button
-          style={{
-            margin: 5,
-            backgroundColor: "white",
-            borderWidth: 3,
-            borderColor: "black",
-          }}
-          onPress={() => setShowBathrooms(!showBathrooms)}
-        >
-          <Text style={{ fontSize: 20 }}>🚽</Text>
-        </Button>
+        <FilterButton
+          icon="💧"
+          filterName="drinkingFountain"
+          isSelected={selectedFeatureFilters["drinkingFountain"]}
+          updateFilterSelection={() =>
+            updateFilterSelection("drinkingFountain")
+          }
+        ></FilterButton>
+        <FilterButton
+          icon="🚽"
+          filterName="restroom"
+          isSelected={selectedFeatureFilters["restroom"]}
+          updateFilterSelection={() => updateFilterSelection("restroom")}
+        ></FilterButton>
+        <FilterButton
+          icon="🪑"
+          filterName="bench"
+          isSelected={selectedFeatureFilters["bench"]}
+          updateFilterSelection={() => updateFilterSelection("bench")}
+        ></FilterButton>
       </View>
       <FeatureDetailDrawer
         isOpen={isOpen}
