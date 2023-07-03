@@ -13,6 +13,7 @@ export default FilterButton = ({
         margin: 5,
         backgroundColor: "white",
         shadowRadius: "2px",
+        borderRadius: 30,
       }}
       onPress={() => updateFilterSelection(selectedFeatureFilterName)}
     >
