@@ -1,19 +1,40 @@
-export const isWithinDistance = (point1, point2, limitInKm = 1) => {
-  const toRad = (value) => (value * Math.PI) / 180;
+export const isWithinDistance = (
+  firstPoint,
+  secondPoint,
+  distanceLimitInKilometers = 1
+) => {
+  const convertDegreesToRadians = (degreeValue) =>
+    (degreeValue * Math.PI) / 180;
 
-  const R = 6371; // Earth radius in km
-  const dLat = toRad(point2.latitude - point1.latitude);
-  const dLon = toRad(point2.longitude - point1.longitude);
+  const earthRadiusInKilometers = 6371;
+  const differenceInLatitude = convertDegreesToRadians(
+    secondPoint.latitude - firstPoint.latitude
+  );
+  const differenceInLongitude = convertDegreesToRadians(
+    secondPoint.longitude - firstPoint.longitude
+  );
 
-  const lat1 = toRad(point1.latitude);
-  const lat2 = toRad(point2.latitude);
+  const firstPointLatitudeInRadians = convertDegreesToRadians(
+    firstPoint.latitude
+  );
+  const secondPointLatitudeInRadians = convertDegreesToRadians(
+    secondPoint.latitude
+  );
 
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.sin(dLon / 2) * Math.sin(dLon / 2) * Math.cos(lat1) * Math.cos(lat2);
+  const haversineFormulaComponent =
+    Math.sin(differenceInLatitude / 2) * Math.sin(differenceInLatitude / 2) +
+    Math.sin(differenceInLongitude / 2) *
+      Math.sin(differenceInLongitude / 2) *
+      Math.cos(firstPointLatitudeInRadians) *
+      Math.cos(secondPointLatitudeInRadians);
 
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const angularDistance =
+    2 *
+    Math.atan2(
+      Math.sqrt(haversineFormulaComponent),
+      Math.sqrt(1 - haversineFormulaComponent)
+    );
 
-  const distance = R * c;
-  return distance <= limitInKm;
+  const calculatedDistance = earthRadiusInKilometers * angularDistance;
+  return calculatedDistance <= distanceLimitInKilometers;
 };
