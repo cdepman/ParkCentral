@@ -108,7 +108,7 @@ export default function App() {
       <View
         style={{
           position: "absolute",
-          bottom: "17%",
+          top: "17%",
           alignSelf: "flex-start",
           backgroundColor: "#414a4c90",
           padding: 4,
